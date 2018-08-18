@@ -25,12 +25,12 @@ class CallLlama(BoxLayout):
 
         # Get data from textInputs
         g = self.game_input.text
-        n = self.nation_input.text
+        n = self.nation_input.text.capitalize()
 
         try:
 
             # Scrape Llama
-            res = requests.get("http://www.llamaserver.net/gameinfo.cgi?game=" + g)
+            res = requests.get("http://www.llamaserver.net/gameinfo.cgi?game=" + str(g))
             soup = str(BeautifulSoup(res.content, features="html5lib"))
 
             # Get game info
@@ -42,17 +42,16 @@ class CallLlama(BoxLayout):
 
             # Convert to Local Timezone
             gmt = parse(time)
-            t = str(get_localzone())
-            local = gmt.astimezone(timezone(t))
+            tz = str(get_localzone())
+            local = gmt.astimezone(timezone(tz))
             due = local.strftime('%m/%d/%y at %H:%M')
 
             # Find nation status
-            nation = 'Phlegra'
-            ln = soup.find(n)
+            ln = soup.find(str(n))
             ns = soup[ln:].split('<td>')[2].split('</td>')[0]
 
             # Output
-            output = str('Game: '+ g + '\nTurn ' + turn + ' due on ' + due + ' ' + t + '\n' + nation + ' status: ' + ns)
+            output = str('Game: '+ g + '\nTurn ' + turn + ' due on ' + due + ' ' + tz + '\n' + n + ' status: ' + ns)
             self.display.text = output
 
         except:
