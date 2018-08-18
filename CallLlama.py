@@ -8,10 +8,10 @@ from kivy.uix.boxlayout import BoxLayout
 from pytz import timezone
 import pandas as pd
 import requests
-import sys
+from tzlocal import get_localzone
 
-Config.set('graphics', 'width', '360')
-Config.set('graphics', 'height', '420')
+Config.set('graphics', 'width', '420')
+Config.set('graphics', 'height', '400')
 Config.write()
 
 class CallLlama(BoxLayout):
@@ -26,7 +26,6 @@ class CallLlama(BoxLayout):
         # Get data from textInputs
         g = self.game_input.text
         n = self.nation_input.text
-        t = self.timezone_input.text
 
         try:
 
@@ -43,6 +42,7 @@ class CallLlama(BoxLayout):
 
             # Convert to Local Timezone
             gmt = parse(time)
+            t = str(get_localzone())
             local = gmt.astimezone(timezone(t))
             due = local.strftime('%m/%d/%y at %H:%M')
 

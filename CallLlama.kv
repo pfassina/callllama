@@ -6,7 +6,6 @@ CallLlama:
     orientation: "vertical"
     game_input: game
     nation_input: nation
-    timezone_input: timezone
     display: output
     padding: 20
     spacing: 20
@@ -26,6 +25,7 @@ CallLlama:
         Label:
             text: "Game:"
         TextInput:
+            write_tab: False
             id: game
 
     BoxLayout:
@@ -35,16 +35,8 @@ CallLlama:
         Label:
             text: "Nation:"
         TextInput:
+            write_tab: False
             id: nation
-
-    BoxLayout:
-        size_hint_y: None
-        height: "40dp"
-
-        Label:
-            text: "Timezone:"
-        TextInput:
-            id: timezone
 
     BoxLayout:
         size_hint_y: None
