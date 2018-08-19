@@ -13,4 +13,4 @@ To run callllama you you need to first install all the requirements.\
 ### Linux:
 *Linux users will need to first install cython, and then the requirements.*\
 `pip install cython`  
-`pip install -r requirements_windows.txt`
+`pip install -r requirements_linux.txt`
