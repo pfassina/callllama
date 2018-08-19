@@ -30,7 +30,7 @@ class callllama(BoxLayout):
         try:
 
             # Scrape Llama
-            res = requests.get("http://www.llamaserver.net/gameinfo.cgi?game=" + str(g))
+            res = requests.get("http://www.llamaserver.net/gameinfo.cgi?game=" + g)
             soup = str(BeautifulSoup(res.content, features="html5lib"))
 
             # Get game info
@@ -51,7 +51,7 @@ class callllama(BoxLayout):
             ns = soup[ln:].split('<td>')[2].split('</td>')[0]
 
             # Output
-            output = str('Game: '+ g + '\nTurn ' + turn + ' due on ' + due + ' ' + tz + '\n' + n + ' status: ' + ns)
+            output = str('Game: '+ g + ' || Turn ' + turn + '\nNext Host: ' + due + ' ' + tz.split('/')[1].replace('_',' ') + '\n' + n + ' status: ' + ns)
             self.display.text = output
 
         except:
