@@ -20,13 +20,13 @@ class callllama(BoxLayout):
     timezone_input = ObjectProperty()
     submit_input = ObjectProperty()
 
-    def __init__(self, **kwargs):
-        super(callllama, self).__init__(**kwargs)
-        Window.bind(on_key_down=self._on_keyboard_down)
-
-    def _on_keyboard_down(self, instance, keyboard, keycode, text, modifiers):
-        if keycode == 40:  # 40 - Enter key pressed
-            self.call_llama()
+    # def __init__(self, **kwargs):
+    #     super(callllama, self).__init__(**kwargs)
+    #     Window.bind(on_key_down=self._on_keyboard_down)
+    #
+    # def _on_keyboard_down(self, instance, keyboard, keycode, text, modifiers):
+    #     if keycode == 40:  # 40 - Enter key pressed
+    #         self.call_llama()
 
     def call_llama(self):
 
