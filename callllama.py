@@ -5,6 +5,7 @@ from kivy.app import App
 from kivy.config import Config
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
+from kivy.core.window import Window
 from pytz import timezone
 import requests
 from tzlocal import get_localzone
@@ -17,6 +18,15 @@ class callllama(BoxLayout):
     game_input = ObjectProperty()
     nation_input = ObjectProperty()
     timezone_input = ObjectProperty()
+    submit_input = ObjectProperty()
+
+    def __init__(self, **kwargs):
+        super(callllama, self).__init__(**kwargs)
+        Window.bind(on_key_down=self._on_keyboard_down)
+
+    def _on_keyboard_down(self, instance, keyboard, keycode, text, modifiers):
+        if keycode == 40:  # 40 - Enter key pressed
+            self.call_llama()
 
     def call_llama(self):
 
@@ -54,7 +64,7 @@ class callllama(BoxLayout):
             self.display.text = output
 
         except:
-            output = 'Game not Found. Try Again.'
+            output = 'Game not Found. Llama is imprisoned.'
             self.display.text = output
 
 class callllamaApp(App):
