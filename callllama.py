@@ -6,7 +6,6 @@ from kivy.config import Config
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from pytz import timezone
-import pandas as pd
 import requests
 from tzlocal import get_localzone
 
@@ -25,7 +24,7 @@ class callllama(BoxLayout):
 
         # Get data from textInputs
         g = self.game_input.text
-        n = self.nation_input.text.capitalize()
+        n = self.nation_input.text.title()
 
         try:
 
