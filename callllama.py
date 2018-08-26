@@ -5,9 +5,7 @@ from pytz import timezone
 import requests
 from tzlocal import get_localzone
 
-def call_llama():
-    print("thou shalt enter the name of your desired world: ")
-    game = input()
+def call_llama(game):
     try:
         game_page = request_game_page(game)
         soup_obj = parse_game_page(game_page)
@@ -62,7 +60,11 @@ def scrape_game_info(game, soup_obj):
     return (game, turn, due, tz_string, nation_table)
 
 def format_info(game_info):
-    g, turn, due, tz, table = game_info
-    return str('Game: '+ g + ' || Turn ' + turn + '\nNext Host: ' + due + ' ' + tz + '\n' + table)
+    game, turn, due, tz, table = game_info
+    return str('Game: ' + game + ' || Turn ' + turn +
+               '\nNext Host: ' + due + ' ' + tz +
+                '\n' + table)
 
-call_llama()
+if __name__ == "__main__":
+    import sys
+    call_llama(sys.argv[1])
