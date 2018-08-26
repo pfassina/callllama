@@ -8,31 +8,40 @@ from tzlocal import get_localzone
 def call_llama():
     print("thou shalt enter the name of your desired world: ")
     game = input()
-    game_info = scrape_game_info(game)
-    output = format_info(game_info)
-    print(output)
+    try:
+        game_page = request_game_page(game)
+        soup_obj = parse_game_page(game_page)
+        verify_game(game, soup_obj)
+        game_info = scrape_game_info(game, soup_obj)
+        output = format_info(game_info)
+        print(output)
+    except Exception as e:
+        print(e)
 
 def request_game_page(game):
     try:
         return requests.get("http://www.llamaserver.net/gameinfo.cgi?game=" + game)
     except Exception as e:
-        print(e)
-        print('Game not Found. Llama is imprisoned.')
+        raise RuntimeError('Game not Found. Llama is imprisoned.') from e
 
 def parse_game_page(game_page):
     try:
         return BeautifulSoup(game_page.content, features="html5lib")
     except Exception as e:
-        print(e)
-        print("error parsing game data")
+        raise RuntimeError("error parsing game data") from e
+
+def verify_game(game, soup):
+    # there is no table element on page when game doesn't exist
+    if soup.find_all('table'):
+        return True
+    else:
+        raise RuntimeError('{0} is not a real game'.format(game))
 
 def nations(soup):
     strip_row = lambda row : ''.join([td.string for td in row.find_all('td')])
     return [strip_row(row) for row in soup.find_all('tr')]
 
-def scrape_game_info(game):
-    game_page = request_game_page(game)
-    soup_obj = parse_game_page(game_page)
+def scrape_game_info(game, soup_obj):
     soup = str(soup_obj)
 
     loc = soup.find('Game: ')
