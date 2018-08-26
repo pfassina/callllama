@@ -1,7 +1,7 @@
 from callllama import call_llama
 import PySimpleGUI as sg
 
-def main():
+def gui():
 
     with sg.FlexForm('call llama', auto_size_text=True, default_element_size=(40, 1)) as form:
 
@@ -26,4 +26,4 @@ def main():
             else:
                 break
 
-main()
+gui()
