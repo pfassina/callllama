@@ -1,76 +1,91 @@
+"""This module is used with the main function `call_llama`
+
+The call_llama function accepts a string and will return a formatted
+string with the desired game's current status and hosting time.
+If any errors are encountered, call_llama will return a string with
+the error text.
+
+The module can also be run as a script from the command line by passing
+the target game as an argument.
+
+Example:
+    $ python callllama.py myGame
+"""
+
 from bs4 import BeautifulSoup
 from datetime import datetime
 from dateutil.parser import parse
-from kivy.app import App
-from kivy.config import Config
-from kivy.properties import ObjectProperty
-from kivy.uix.boxlayout import BoxLayout
-from kivy.core.window import Window
 from pytz import timezone
 import requests
 from tzlocal import get_localzone
 
-Config.set('graphics', 'width', '420')
-Config.set('graphics', 'height', '400')
-Config.write()
+def call_llama(game):
+    """Find game page on llamaserver and return game info as a formatted string.
 
-class callllama(BoxLayout):
-    game_input = ObjectProperty()
-    nation_input = ObjectProperty()
-    timezone_input = ObjectProperty()
-    submit_input = ObjectProperty()
+    Args:
+        game (str): the name of a game hosted on llamaserver.net.
 
-    # def __init__(self, **kwargs):
-    #     super(callllama, self).__init__(**kwargs)
-    #     Window.bind(on_key_down=self._on_keyboard_down)
-    #
-    # def _on_keyboard_down(self, instance, keyboard, keycode, text, modifiers):
-    #     if keycode == 40:  # 40 - Enter key pressed
-    #         self.call_llama()
+    Returns:
+        str: formatted game info, or an error string.
+    """
+    try:
+        game_page = request_game_page(game)
+        soup_obj = parse_game_page(game_page)
+        verify_game(game, soup_obj)
+        game_info = scrape_game_info(game, soup_obj)
+        return format_info(game_info)
+    except Exception as e:
+        return e
 
-    def call_llama(self):
+def request_game_page(game):
+    try:
+        return requests.get("http://www.llamaserver.net/gameinfo.cgi?game=" + game)
+    except Exception as e:
+        raise RuntimeError('Game not Found. Llama is imprisoned.') from e
 
-        self.display.text = 'Llama is not Awaken'
+def parse_game_page(game_page):
+    try:
+        return BeautifulSoup(game_page.content, features="html5lib")
+    except Exception as e:
+        raise RuntimeError("error parsing game data") from e
 
-        # Get data from textInputs
-        g = self.game_input.text
-        n = self.nation_input.text.title()
+def verify_game(game, soup):
+    # there is no table element on page when game doesn't exist
+    if soup.find_all('table'):
+        return True
+    else:
+        raise RuntimeError('{0} is not a real game'.format(game))
 
-        try:
+def nations(soup):
+    strip_row = lambda row : ''.join([td.string for td in row.find_all('td')])
+    return [strip_row(row) for row in soup.find_all('tr')]
 
-            # Scrape Llama
-            res = requests.get("http://www.llamaserver.net/gameinfo.cgi?game=" + g)
-            soup = str(BeautifulSoup(res.content, features="html5lib"))
+def scrape_game_info(game, soup_obj):
+    soup = str(soup_obj)
 
-            # Get game info
-            loc = soup.find('Game: ')
-            info = soup[loc:].split('<br/>')[1:3]
+    loc = soup.find('Game: ')
+    info = soup[loc:].split('<br/>')[1:3]
+    turn = info[0].replace('Turn number ','')
+    time = info[1].replace('Next turn due: ','').rstrip()
 
-            turn = info[0].replace('Turn number ','')
-            time = info[1].replace('Next turn due: ','').rstrip()
+    # Convert to Local Timezone
+    gmt = parse(time)
+    tz = str(get_localzone())
+    local = gmt.astimezone(timezone(tz))
+    tz_string = tz.split('/')[1].replace('_',' ')
+    due = local.strftime('%m/%d/%y at %H:%M')
 
-            # Convert to Local Timezone
-            gmt = parse(time)
-            tz = str(get_localzone())
-            local = gmt.astimezone(timezone(tz))
-            due = local.strftime('%m/%d/%y at %H:%M')
+    # Find nation status
+    nation_table = '\n'.join(nations(soup_obj))
 
-            # Find nation status
-            ln = soup.find(str(n))
-            ns = soup[ln:].split('<td>')[2].split('</td>')[0]
+    return (game, turn, due, tz_string, nation_table)
 
-            # Output
-            output = str('Game: '+ g + ' || Turn ' + turn + '\nNext Host: ' + due + ' ' + tz.split('/')[1].replace('_',' ') + '\n' + n + ' status: ' + ns)
-            self.display.text = output
+def format_info(game_info):
+    game, turn, due, tz_string, nation_table = game_info
+    info = ' '.join(['Game:', game, '|| Turn', turn,])
+    next_host = ' '.join(['Next Host: ', due, tz_string,])
+    return '\n'.join([info, next_host, nation_table])
 
-        except:
-            output = 'Game not Found. Llama is imprisoned.'
-            self.display.text = output
-
-class callllamaApp(App):
-
-    def build(self):
-        return callllama()
-
-callllamaApp = callllamaApp()
-callllamaApp.run()
+if __name__ == "__main__":
+    import sys
+    print(call_llama(sys.argv[1]))
