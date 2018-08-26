@@ -1,3 +1,17 @@
+"""This module is used with the main function `call_llama`
+
+The call_llama function accepts a string and will return a formatted
+string with the desired game's current status and hosting time.
+If any errors are encountered, call_llama will return a string with
+the error text.
+
+The module can also be run as a script from the command line by passing
+the target game as an argument.
+
+Example:
+    $ python callllama.py myGame
+"""
+
 from bs4 import BeautifulSoup
 from datetime import datetime
 from dateutil.parser import parse
@@ -6,15 +20,22 @@ import requests
 from tzlocal import get_localzone
 
 def call_llama(game):
+    """Find game page on llamaserver and return game info as a formatted string.
+
+    Args:
+        game (str): the name of a game hosted on llamaserver.net.
+
+    Returns:
+        str: formatted game info, or an error string.
+    """
     try:
         game_page = request_game_page(game)
         soup_obj = parse_game_page(game_page)
         verify_game(game, soup_obj)
         game_info = scrape_game_info(game, soup_obj)
-        output = format_info(game_info)
-        print(output)
+        return format_info(game_info)
     except Exception as e:
-        print(e)
+        return e
 
 def request_game_page(game):
     try:
@@ -60,11 +81,11 @@ def scrape_game_info(game, soup_obj):
     return (game, turn, due, tz_string, nation_table)
 
 def format_info(game_info):
-    game, turn, due, tz, table = game_info
-    return str('Game: ' + game + ' || Turn ' + turn +
-               '\nNext Host: ' + due + ' ' + tz +
-                '\n' + table)
+    game, turn, due, tz_string, nation_table = game_info
+    info = ' '.join(['Game:', game, '|| Turn', turn,])
+    next_host = ' '.join(['Next Host: ', due, tz_string,])
+    return '\n'.join([info, next_host, nation_table])
 
 if __name__ == "__main__":
     import sys
-    call_llama(sys.argv[1])
+    print(call_llama(sys.argv[1]))
