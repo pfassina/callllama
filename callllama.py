@@ -56,26 +56,4 @@ def format_info(game_info):
     g, turn, due, tz, table = game_info
     return str('Game: '+ g + ' || Turn ' + turn + '\nNext Host: ' + due + ' ' + tz + '\n' + table)
 
-
 call_llama()
-
-# old gui
-        # self.display.text = 'Llama is not Awaken'
-
-        # def __init__(self, **kwargs):
-    #     super(callllama, self).__init__(**kwargs)
-    #     Window.bind(on_key_down=self._on_keyboard_down)
-    #
-    # def _on_keyboard_down(self, instance, keyboard, keycode, text, modifiers):
-    #     if keycode == 40:  # 40 - Enter key pressed
-    #         self.call_llama()
-
-            # Get data from textInputs
-        # g = self.game_input.text
-        # n = self.nation_input.text.title()
-
-# game_input = ObjectProperty()
-    # nation_input = ObjectProperty()
-    # timezone_input = ObjectProperty()
-    # submit_input = ObjectProperty()
-
