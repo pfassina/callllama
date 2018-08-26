@@ -84,7 +84,7 @@ def format_info(game_info):
     game, turn, due, tz_string, nation_table = game_info
     info = ' '.join(['Game:', game, '|| Turn', turn,])
     next_host = ' '.join(['Next Host: ', due, tz_string,])
-    return '\n'.join([info, next_host, nation_table])
+    return '\n'.join([info, next_host, '', nation_table])
 
 if __name__ == "__main__":
     import sys
