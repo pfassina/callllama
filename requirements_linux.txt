@@ -1,16 +1,11 @@
 beautifulsoup4==4.6.3
-certifi==2018.8.13
+certifi==2018.8.24
 chardet==3.0.4
-Cython==0.28.5
 DateTime==4.2
 docutils==0.14
 html5lib==1.0.1
 idna==2.7
-Kivy==1.10.1
-Kivy-Garden==0.1.4
 parse==1.8.4
-pygame==1.9.4
-Pygments==2.2.0
 python-dateutil==2.7.3
 pytz==2018.5
 requests==2.19.1
