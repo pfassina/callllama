@@ -2,7 +2,7 @@
 Fetches Turn Timer for Dominions Llama Games and converts it to your timezone. 
 
 ## Screen Shot:
-![Screen Shot](https://image.prntscr.com/image/uEBq0GuoR_utcptZK-hhFg.png)
+![Screen Shot](http://i.imgur.com/MIp2wUh.png)
 
 ## Requirements
 To run callllama you you need to first install all the requirements.  
