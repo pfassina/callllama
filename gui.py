@@ -6,10 +6,10 @@ def gui():
     form = sg.FlexForm('call llama', auto_size_text=True, default_element_size=(40, 1))
 
     layout = [
-        [sg.Text('call llama!', font=("Helvetica", 20), text_color='black')],
+        [sg.Text('call llama!', font=("Helvetica", 20))],
         [sg.Text('and llama shall respond\n')],
-        [sg.Text('Game', size=(10, 1), auto_size_text=False, justification='left'), sg.InputText(do_not_clear=True)],
-        [sg.Text('Nation', size=(10, 1), auto_size_text=False, justification='left'), sg.InputText(do_not_clear=True)],
+        [sg.Text('Game', size=(10, 1)), sg.InputText(do_not_clear=True)],
+        [sg.Text('Nation', size=(10, 1)), sg.InputText(do_not_clear=True)],
         [sg.Text('')],
         [sg.Output(size=(60, 20))],
         [sg.Text('')],
