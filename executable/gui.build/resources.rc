@@ -1,2 +1,0 @@
-#include "winuser.h"
-3 RCDATA "gui.build/__constants.bin"
