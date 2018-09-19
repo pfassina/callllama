@@ -103,5 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#
+# others
 config.py
+/chrome_extension
